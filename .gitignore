@@ -1,0 +1,9 @@
+# Jupyter Notebook 체크포인트 파일 무시
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+
+# .env 파일 무시
+.env
+
+# pycache 디렉토리 무시
+__pycache__/
