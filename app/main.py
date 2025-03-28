@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from app.routers.common import common_router
 from app.routers.enroll import enroll_router
+from app.routers.generate import generate_router
 
 from app.core.configs.config import main_config
 from app.core.utils.logger import logger
@@ -11,6 +12,7 @@ app = FastAPI()
 
 app.include_router(common_router)
 app.include_router(enroll_router)
+app.include_router(generate_router)
 
 # startup 이벤트 등록
 @app.on_event("startup")

@@ -10,3 +10,7 @@ __pycache__/
 
 # chroma db 무시
 **/chroma_db/
+
+# swp 파일 무시
+*.swp
+*.swo

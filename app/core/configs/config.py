@@ -16,5 +16,8 @@ class Config:
     COLLECTION_NAME = os.getenv("COLLECTION_NAME", "TEST")
     
     CHROMA_PERSIST_DIRECTORY = os.getenv("CHROMA_PERSIST_DIRECTORY", None)
+
+    LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
+    LLM_SYSTEM_ROLE = os.getenv("LLM_SYSTEM_ROLE", "You are a helpful, knowledgeable, and concise assistant. Provide clear and accurate answers to the user's questions")
     
 main_config = Config()
