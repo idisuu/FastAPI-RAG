@@ -1,6 +1,6 @@
 from fastapi import APIRouter, UploadFile, Depends
 
-from app.core.services.enroll_service import enroll_service
+from app.core.services.enroll_service import get_enroll_service
 
 from app.db.chroma_db import get_vectordb
 
@@ -12,7 +12,7 @@ enroll_router = APIRouter(
 
 
 @enroll_router.post("/enroll/file")
-async def enroll_file(file: UploadFile, vectordb=Depends(get_vectordb)):
+async def enroll_file(file: UploadFile, enroll_service=Depends(get_enroll_service), vectordb=Depends(get_vectordb)):
     content = await file.read()
     extension = file.filename.split(".")[-1]
     

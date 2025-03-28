@@ -83,5 +83,8 @@ class EnrollService:
 
         return {"status": "success"}
             
-                    
+# 전역 인스턴스 대신, DI를 위한 함수 정의
+def get_enroll_service():
+    return enroll_service  # 이미 생성된 전역 인스턴스 사용 가능
+
 enroll_service = EnrollService()
