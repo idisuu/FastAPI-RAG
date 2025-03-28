@@ -1,9 +1,9 @@
 import logging
-from app.core.config import config
+from app.core.configs.config import main_config
 
 # ✅ 전역 로거 생성
 logger = logging.getLogger("app_logger")
-logger.setLevel(getattr(logging, config.LOG_LEVEL, logging.INFO))  # 환경 변수에서 설정된 로그 레벨 사용
+logger.setLevel(getattr(logging, main_config.LOG_LEVEL, logging.INFO))  # 환경 변수에서 설정된 로그 레벨 사용
 
 # ✅ 로그 포맷 설정
 log_formatter = logging.Formatter(

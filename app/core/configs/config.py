@@ -17,4 +17,4 @@ class Config:
     
     CHROMA_PERSIST_DIRECTORY = os.getenv("CHROMA_PERSIST_DIRECTORY", None)
     
-config = Config()
+main_config = Config()
