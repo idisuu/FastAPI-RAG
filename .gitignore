@@ -14,3 +14,4 @@ __pycache__/
 # swp 파일 무시
 *.swp
 *.swo
+*.swn
