@@ -65,11 +65,20 @@ class EnrollService:
         if extension not in ALLOWED_EXTENSIONS:
             raise HTTPException(status_code=400, detail=f"{extension} 확장자는 등록할 수 없습니다. 가능한 확장자 : [{', '.join(ALLOWED_EXTENSIONS)}]")
 
+        results = vectordb.get(
+            where={"file_name": file_name}
+        )
+        
+        #print(results)
+        if len(results["ids"]) > 0:
+            raise HTTPException(status_code=400, detail=f"[{file_name}]은 이미 등록된 문서입니다.")
+                
         if extension == "pdf":
             documents = self.load_pdf_from_bytes(content)            
             
         all_chunks = []
-        for doc in documents:                
+        for doc in documents:
+            doc.metadata["file_name"] = file_name
             chunks = self.split_text(doc.page_content)
             for chunk in chunks:
                 all_chunks.append(Document(page_content=chunk, metadata=doc.metadata))
