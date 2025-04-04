@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.backend
+    image: rag_backend:0.0.0
+    container_name: rag_backend_container
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.frontend
+    image: rag_frontend:0.0.0
+    container_name: rag_frontend_container
+    ports:
+      - "8501:8501"
+    environment:
+      - FASTAPI_URL=http://backend:8000
+    depends_on:
+      - backend

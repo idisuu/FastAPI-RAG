@@ -1,8 +1,10 @@
 import streamlit as st
 import requests
 
+import os
+
 # FastAPI 서버 주소 (예: 로컬에서 실행 중인 경우)
-BASE_URL = "http://localhost:8000"
+BASE_URL = os.getenv("FASTAPI_URL", "http://localhost:8000")
 
 st.title("FastAPI와 Streamlit 연동")
 
