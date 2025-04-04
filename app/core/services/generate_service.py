@@ -22,6 +22,8 @@ class GenerateService:
             docs_content = "\n\n".join(
                 [f"==== 문서 {i+1} ====\n{doc[0].page_content}" for i, doc in enumerate(docs)]
             )
+        else:
+            docs_content = ""
             
          # 프롬프트 템플릿의 변수에 맞춰 메시지를 구성합니다.
         messages = {"docs": docs_content, "query": query}        

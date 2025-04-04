@@ -1,0 +1,13 @@
+# deploy/Dockerfile.backend
+FROM python:3.9-slim
+
+WORKDIR /
+
+COPY ./deploy/requirement_backend.txt requirement_backend.txt
+RUN pip install --no-cache-dir -r requirement_backend.txt
+
+# 이제 ../app 대신에, 단순히 'app'을 COPY
+COPY app /app
+
+EXPOSE 8000
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
