@@ -20,5 +20,7 @@ class Config:
     LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
     LLM_SYSTEM_ROLE = os.getenv("LLM_SYSTEM_ROLE", "You are a helpful, knowledgeable, and concise assistant. Provide clear and accurate answers to the user's questions")
     NUM_RAG_REFERENCE = int(os.getenv("NUM_RAG_REFERENCE", 3))
+
+    DOCUMENT_SAVE_DIR = os.getenv("DOCUMENT_SAVE_DIR", None)
     
 main_config = Config()

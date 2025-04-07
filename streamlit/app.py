@@ -42,9 +42,14 @@ if st.button("생성"):
             with st.spinner("텍스트 생성 중..."):
                 response = requests.post(f"{BASE_URL}/generate", params=params)
             if response.ok:
-                result = response.json()
+                result_data = response.json()                
                 st.subheader("생성 결과")
-                st.write(result)
+                st.write(result_data["result"])
+                if use_rag and "related_files" in result_data:
+                    st.subheader("관련 문서 다운로드")
+                    for fname in result_data["related_files"]:                        
+                        pdf_url = f"{BASE_URL}/{fname}"
+                        st.markdown(f"[📄 {fname} 다운로드]({pdf_url})", unsafe_allow_html=True)
             else:
                 st.error(f"생성 실패: {response.text}")
         except Exception as e:

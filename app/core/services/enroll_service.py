@@ -1,5 +1,6 @@
 import io
 import re
+import os
 from typing import BinaryIO, List
 
 from fastapi import HTTPException
@@ -69,12 +70,20 @@ class EnrollService:
             where={"file_name": file_name}
         )
         
-        #print(results)
         if len(results["ids"]) > 0:
             raise HTTPException(status_code=400, detail=f"[{file_name}]은 이미 등록된 문서입니다.")
-                
+
+        document_dir = main_config.DOCUMENT_SAVE_DIR
+
+        if document_dir and not os.path.exists(document_dir):
+            os.makedirs(document_dir)
+        
         if extension == "pdf":
             documents = self.load_pdf_from_bytes(content)            
+            # PDF 원본 저장
+            file_path = os.path.join(document_dir, file_name)
+            with open(file_path, "wb") as f:
+                f.write(content)            
             
         all_chunks = []
         for doc in documents:
