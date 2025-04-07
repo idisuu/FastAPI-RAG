@@ -29,7 +29,7 @@ if uploaded_file is not None:
 # 텍스트 생성(Generate) 섹션
 st.header("텍스트 생성")
 query = st.text_input("생성할 텍스트에 대한 쿼리를 입력하세요")
-use_rag = st.checkbox("RAG 사용 여부", value=False)
+use_rag = st.checkbox("RAG 사용 여부", value=True)
 if st.button("생성"):
     if not query:
         st.error("쿼리를 입력해주세요")

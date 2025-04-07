@@ -5,20 +5,29 @@ services:
     build:
       context: .
       dockerfile: deploy/Dockerfile.backend
-    image: rag_backend:0.0.0
+    image: rag_backend:0.0.1
     container_name: rag_backend_container
     ports:
       - "8000:8000"
-
+    volumes:
+      - ./document:/document
+    command: [
+      "uvicorn",
+      "app.main:app",
+      "--host", "0.0.0.0",
+      "--port", "8000",
+      "--workers", "1"
+    ]    
+      
   frontend:
     build:
       context: .
       dockerfile: deploy/Dockerfile.frontend
-    image: rag_frontend:0.0.0
+    image: rag_frontend:0.0.1
     container_name: rag_frontend_container
     ports:
       - "8501:8501"
     environment:
-      - FASTAPI_URL=http://backend:8000
+      - FASTAPI_URL=http://172.16.152.104:8000
     depends_on:
       - backend
