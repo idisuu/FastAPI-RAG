@@ -100,6 +100,21 @@ class EnrollService:
         logger.info(f"전체 저장된 문서 수: {count_info}")
 
         return {"status": "success"}
+
+    def get_registered_files(self, vectordb) -> str:
+        """
+        vectordb에서 file_name이 빈 문자열이 아닌 문서들을 조회하고,
+        중복 제거 후 정렬된 파일 목록을 텍스트 형식으로 반환합니다.
+        """
+        results = vectordb.get(where={"file_name": {"$ne": ""}})
+        file_names = set()
+        # vectordb.get 결과에서 metadatas 키를 사용합니다.
+        for metadata in results.get("metadatas", []):
+            file_name = metadata.get("file_name", "Unknown")
+            file_names.add(file_name)
+        text_content = "\n".join(sorted(file_names))
+        logger.debug(f"Registered files: {file_names}")
+        return text_content
             
 # 전역 인스턴스 대신, DI를 위한 함수 정의
 def get_enroll_service():
