@@ -1,5 +1,6 @@
 import io
 import re
+import os
 from typing import BinaryIO, List
 
 from fastapi import HTTPException
@@ -65,11 +66,28 @@ class EnrollService:
         if extension not in ALLOWED_EXTENSIONS:
             raise HTTPException(status_code=400, detail=f"{extension} 확장자는 등록할 수 없습니다. 가능한 확장자 : [{', '.join(ALLOWED_EXTENSIONS)}]")
 
+        results = vectordb.get(
+            where={"file_name": file_name}
+        )
+        
+        if len(results["ids"]) > 0:
+            raise HTTPException(status_code=400, detail=f"[{file_name}]은 이미 등록된 문서입니다.")
+
+        document_dir = main_config.DOCUMENT_SAVE_DIR
+
+        if document_dir and not os.path.exists(document_dir):
+            os.makedirs(document_dir)
+        
         if extension == "pdf":
             documents = self.load_pdf_from_bytes(content)            
+            # PDF 원본 저장
+            file_path = os.path.join(document_dir, file_name)
+            with open(file_path, "wb") as f:
+                f.write(content)            
             
         all_chunks = []
-        for doc in documents:                
+        for doc in documents:
+            doc.metadata["file_name"] = file_name
             chunks = self.split_text(doc.page_content)
             for chunk in chunks:
                 all_chunks.append(Document(page_content=chunk, metadata=doc.metadata))
@@ -82,6 +100,21 @@ class EnrollService:
         logger.info(f"전체 저장된 문서 수: {count_info}")
 
         return {"status": "success"}
+
+    def get_registered_files(self, vectordb) -> str:
+        """
+        vectordb에서 file_name이 빈 문자열이 아닌 문서들을 조회하고,
+        중복 제거 후 정렬된 파일 목록을 텍스트 형식으로 반환합니다.
+        """
+        results = vectordb.get(where={"file_name": {"$ne": ""}})
+        file_names = set()
+        # vectordb.get 결과에서 metadatas 키를 사용합니다.
+        for metadata in results.get("metadatas", []):
+            file_name = metadata.get("file_name", "Unknown")
+            file_names.add(file_name)
+        text_content = "\n".join(sorted(file_names))
+        logger.debug(f"Registered files: {file_names}")
+        return text_content
             
 # 전역 인스턴스 대신, DI를 위한 함수 정의
 def get_enroll_service():
